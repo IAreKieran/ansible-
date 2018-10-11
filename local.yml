@@ -1,9 +1,11 @@
 - hosts: localhost
   become: true
+  pre_tasks:
+    - name: update repositories
+      dnf: update_cache=yes
+      changed_when: False
+
   tasks:
-  - name: Install packages
-    dnf: name={{item}}
-    with_items:
-      - htop
-      - mc
-      - tmux
+    - include: tasks/users.yml
+    - include: tasks/packages.yml
+    - include: tasks/cron.yml
