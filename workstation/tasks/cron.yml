@@ -1,0 +1,8 @@
+- name: install cron job for auto-ansible
+  cron: 
+    name: ansible provision
+#    minute: "*/1"
+    minute: 0
+    hour: "*/1"
+    job: date >> /tmp/ansible-cron-log.txt && sudo /usr/bin/ansible-playbook -v {{ playbook_dir }}/workstation.yml >> /tmp/ansible-cron-log.txt
+    user: ansible 

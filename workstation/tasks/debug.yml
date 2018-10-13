@@ -1,8 +1,15 @@
 - debug:
     msg: "System {{ inventory_hostname }} has gateway {{ ansible_default_ipv4.gateway }}"
 
+#- debug:
+#    msg: $HOME
+
 - debug:
-    msg: $HOME
+    msg: "{{ playbook_dir }}"
 
 - shell: /usr/bin/whoami
   register: result
+
+- shell: /usr/bin/whoami
+  register: result
+  become_user: kieran
