@@ -1,8 +1,22 @@
+- name: create ansible group
+  group:
+    name: ansible
+    gid: 900
+
 - name: create ansible user
-  user: name=ansible uid=900
+  user:
+    name: ansible
+    group: ansible
+    uid: 900
+
+- name: add repo to ansible group
+  file:
+    path: /home/kieran/projects/ansible-projects
+    recurse: yes
+    group: ansible
+    # when specifying mode using octal numbers, add a leading 0
+#    mode: 0664
+
+# Sort out proper permissions later
 - name: copy sudoers_ansible
-  copy: src=files/sudoers_ansible
-    dest: /etc/sudoers.d/ansible
-    owner: root
-    group: root
-    mode: 0440
+  copy: src=files/sudoers_ansible dest=/etc/sudoers.d/ansible owner=root group=root mode=0440

@@ -1,11 +1,18 @@
 - hosts: localhost
   become: true
   pre_tasks:
-    - name: update repositories
-      dnf: update_cache=yes
-      changed_when: False
+#    - name: bootstrap ansible dependancies
+#      raw: dnf -y -e0 -d0 install python3-dnf
+#    - name: update repositories
+#      dnf: update_cache=yes
+#      changed_when: False
+#    - name: upgrade all current packages
+#      dnf:
+#        name: "*"
+#        state: latest
 
   tasks:
+#    - include: tasks/debug.yml
     - include: tasks/users.yml
     - include: tasks/packages.yml
     - include: tasks/cron.yml

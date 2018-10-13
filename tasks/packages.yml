@@ -1,7 +1,10 @@
 - name: Install packages
-  dnf: name={{item}}
-  with_items:
-    - nano
-    - gedit
-    - gedit-plugins
-    - docker-ce
+  dnf:
+    name: [
+          'libselinux', # Required for ansible
+          'htop',
+          'nano',
+          'gedit',
+          'gedit-plugins',
+          'docker-ce',
+           ]
