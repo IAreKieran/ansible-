@@ -27,9 +27,6 @@
   register: docker_repo_enabled
   changed_when: false
 
-- debug:
-    msg: "{{ docker_repo_enabled }}"
-
 - name: Add docker-ce repo
   shell: dnf config-manager \
           --add-repo \
