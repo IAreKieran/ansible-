@@ -2,7 +2,7 @@
     msg: "System {{ inventory_hostname }} has gateway {{ ansible_default_ipv4.gateway }}"
 
 #- debug:
-#    msg: $HOME
+#    msg: "{{ user }}"
 
 - debug:
     msg: "{{ playbook_dir }}"

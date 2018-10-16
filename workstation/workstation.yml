@@ -3,6 +3,7 @@
   pre_tasks:
      - set_fact:
           playbook_dir: /home/projects/kieran/ansible-projects/workstation
+          user: kieran
 #    - name: bootstrap ansible dependancies
 #      raw: dnf -y -e0 -d0 install python3-dnf
 #    - name: update repositories
@@ -15,6 +16,6 @@
 
   tasks:
 #    - include: tasks/debug.yml
-    - include: tasks/users.yml
-    - include: tasks/packages.yml
-    - include: tasks/cron.yml
+    - import_tasks: tasks/users.yml
+    - import_tasks: tasks/packages.yml
+    - import_tasks: tasks/cron.yml
