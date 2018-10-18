@@ -14,8 +14,10 @@
     name: ansible
     group: ansible
     uid: 900
+    create_home: yes
+    home: /var/local/ansible
 
-# Sort out proper permissions later
+# Will only allow ansible user to use sudo when executing playbook
 - name: copy sudoers_ansible
   copy:
     src: files/sudoers_ansible
