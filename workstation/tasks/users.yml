@@ -1,3 +1,9 @@
+- name: Set user groups
+  user:
+    name: "{{ user }}"
+    groups: "{{ user }},wheel,audio"
+    append: yes
+
 - name: create ansible group
   group:
     name: ansible
