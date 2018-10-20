@@ -1,15 +1,17 @@
-#- name: Gather facts for rvm
-#  setup:
-#   - set_fact:
-#        rvm_galaxy: /etc/ansible
-#        user: kieran
-
 - name: Install ansible-galaxy rvm role
   shell: ansible-galaxy install rvm.ruby
   when: '"/etc/ansible/roles/rvm.ruby" is not directory'
 
-#- include_role:
-#     name: foo_app_instance
-#  vars:
-#    dir: '/opt/a'
-#    app_port: 5000
+- name: Set defaults for rvm role
+  copy:
+    src: files/rvm_role_defaults.yml
+    dest: /etc/ansible/roles/rvm.ruby/defaults/main.yml
+
+- include_role:
+     name: rvm.ruby
+
+- name: rvm cleanup
+  shell: rvm cleanup all
+  become: yes
+  become_user: "{{ user }}"
+  changed_when: false
