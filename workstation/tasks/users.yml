@@ -3,25 +3,3 @@
     name: "{{ user }}"
     groups: "{{ user }},wheel,audio"
     append: yes
-
-- name: create ansible group
-  group:
-    name: ansible
-    gid: 900
-
-- name: create ansible user
-  user:
-    name: ansible
-    group: ansible
-    uid: 900
-    create_home: yes
-    home: /var/local/ansible
-
-# Will only allow ansible user to use sudo when executing playbook
-- name: copy sudoers_ansible
-  copy:
-    src: files/sudoers_ansible
-    dest: /etc/sudoers.d/ansible
-    owner: root
-    group: root
-    mode: 0440

@@ -1,3 +1,33 @@
+- name: create ansible group
+  group:
+    name: ansible
+    gid: 900
+
+- name: create ansible user
+  user:
+    name: ansible
+    group: ansible
+    uid: 900
+    create_home: yes
+    home: /var/local/ansible
+
+# Will only allow ansible user to use sudo when executing playbook
+- name: copy sudoers_ansible
+  copy:
+    src: files/sudoers_ansible
+    dest: /etc/sudoers.d/ansible
+    owner: root
+    group: root
+    mode: 0440
+
+- name: copy ansible.cfg to ansible user home directory
+  copy:
+    src: ansible.cfg
+    dest: /var/local/ansible/ansible.cfg
+    owner: ansible
+    group: ansible
+    mode: 0755
+
 - name: install cron job for auto-ansible
   cron: 
     name: ansible provision

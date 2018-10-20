@@ -11,7 +11,9 @@
      name: rvm.ruby
 
 - name: rvm cleanup
-  shell: rvm cleanup all
+  shell: source $HOME/.rvm/scripts/rvm && rvm cleanup all
+  args:
+    executable: /bin/bash
   become: yes
   become_user: "{{ user }}"
   changed_when: false
