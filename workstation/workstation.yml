@@ -16,6 +16,7 @@
 
   tasks:
 #    - include: tasks/debug.yml
-    - import_tasks: tasks/users.yml
-    - import_tasks: tasks/packages.yml
-    - import_tasks: tasks/cron.yml
+    - import_tasks: tasks/installations/rvm.yml
+#    - import_tasks: tasks/users.yml
+#    - import_tasks: tasks/packages.yml
+#    - import_tasks: tasks/cron.yml
