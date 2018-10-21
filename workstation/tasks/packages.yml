@@ -12,10 +12,14 @@
           'nano',
           'gedit',
           'gedit-plugins',
+          'git',
            ]
     state: latest
 
 - import_tasks: installations/docker-ce.yml
+- import_tasks: installations/pyenv.yml
+  become: yes
+  become_user: "{{ user }}"
 - import_tasks: installations/rvm.yml
 
 #- name: Install more packages

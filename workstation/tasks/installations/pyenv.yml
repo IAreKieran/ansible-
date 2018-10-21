@@ -1,0 +1,55 @@
+- set_fact:
+    pyenv_dir: "/home/{{ user }}/.pyenv"
+    pyenv_versions: "['2.7.15', '3.7.0']"
+    pyenv_global: 3.7.0
+
+
+- name: Install & update pyenv git repo
+  git:
+    repo: 'https://github.com/pyenv/pyenv.git'
+    dest: "{{ pyenv_dir }}"
+
+
+# Add compatibility for other shells later
+- name: Add pyenv to bash
+  lineinfile:
+    path: "/home/{{ user }}/.bashrc"
+    line: "{{ item }}"
+  loop:
+    - export PYENV_ROOT="$HOME/.pyenv"
+    - export PATH="$PYENV_ROOT/bin:$PATH"
+    - if command -v pyenv 1>/dev/null 2>&1; then eval "$(pyenv init -)"; fi
+
+# https://github.com/pyenv/pyenv/wiki/common-build-problems
+# Varies based on os family, sort later
+- name: Install pyenv build dependencies
+  dnf:
+    name: [
+          'zlib-devel',
+          'bzip2',
+          'bzip2-devel',
+          'readline-devel',
+          'sqlite',
+          'sqlite-devel',
+#          'openssl-devel',
+          'compat-openssl10-devel',
+          'xz',
+          'xz-devel',
+          'libffi-devel',
+          ]
+    state: latest
+  become: yes
+  become_user: root
+
+
+- name: Install python versions
+  shell: '{{ pyenv_dir }}/bin/pyenv install -s {{ item }}'
+  loop: "{{ pyenv_versions }}"
+  register: results
+  changed_when: results.stderr != ''
+  ignore_errors: yes
+
+# Set better changed_when
+- name: Set pyenv global
+  shell: "{{ pyenv_dir }}/bin/pyenv global {{ pyenv_global }}"
+  changed_when: false
