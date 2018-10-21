@@ -4,7 +4,19 @@
     state: latest
     update_cache: yes
 
-- name: Install packages
+- name: Install standard packages
+  dnf:
+    name: [
+          'libselinux', # Required for ansible
+          'gcc',
+          'gnupg',
+          'which',
+          'make',
+          'cronie',
+           ]
+    state: latest
+
+- name: Install my packages
   dnf:
     name: [
           'libselinux', # Required for ansible
@@ -13,10 +25,12 @@
           'gedit',
           'gedit-plugins',
           'git',
+          'nethack',
            ]
     state: latest
 
 - import_tasks: installations/docker-ce.yml
+  when: '"/.dockerenv" is not file'
 - import_tasks: installations/pyenv.yml
   become: yes
   become_user: "{{ user }}"

@@ -7,6 +7,13 @@
     src: files/rvm_role_defaults.yml
     dest: /etc/ansible/roles/rvm.ruby/defaults/main.yml
 
+# Add compatibility for other shells later
+- name: rvm as a function to .bashrc
+  lineinfile:
+    path: "/home/{{ user }}/.bashrc"
+    line: '[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm"'
+    create: yes
+
 - include_role:
      name: rvm.ruby
 
