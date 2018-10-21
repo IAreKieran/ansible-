@@ -1,10 +1,26 @@
-FROM debian:stretch-slim
+FROM debian:buster-slim
 
 # Install required packaged
 RUN apt-get update && apt-get install -y \
       sudo \
       passwd \
-      ansible
+      wget \
+      tar \
+      python2 \
+      python-setuptools
+
+RUN wget https://releases.ansible.com/ansible/ansible-latest.tar.gz \
+    && tar --directory=/ -xzvf ansible-latest.tar.gz \
+    && rm ansible-latest.tar.gz \
+    && cd /ansible-* \
+    && python setup.py install
+
+#      software-properties-common \
+#      gpg \
+#    && apt-add-repository ppa:ansible/ansible \
+#    && apt-get update \
+#    && apt-get install -y \
+#      ansible
 
 # Add user
 ARG HOST_USER_ID
