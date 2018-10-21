@@ -1,5 +1,28 @@
+#- debug:
+#    msg: "{{ ansible_facts }}"
+
+- debug:
+    msg: "{{ ansible_facts['os_family'] }}"
+
+- debug:
+    msg: "{{ ansible_facts['pkg_mgr'] }}"
+
 - name: Set user groups
   user:
     name: "{{ user }}"
-    groups: "{{ user }},wheel,audio"
+    groups: "{{ user }},audio"
     append: yes
+
+- name: Set user sudo group
+  user:
+    name: "{{ user }}"
+    groups: wheel
+    append: yes
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: Set user sudo group
+  user:
+    name: "{{ user }}"
+    groups: sudo
+    append: yes
+  when: ansible_facts['os_family'] == 'Debian'
