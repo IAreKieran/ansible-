@@ -1,25 +1,33 @@
+# add apt-get update for debian? dnf doesn't need it
+
 - name: upgrade all packages
-  dnf:
+  package:
     name: "*"
     state: latest
     update_cache: yes
 
-- name: Install standard packages
-  dnf:
+- name: Install RedHat packages
+  package:
     name: [
           'libselinux', # Required for ansible
+          'which',      # Required for rvm (also just nice to have anyway)
+          'cronie',     # cron stuff
+           ]
+    state: latest
+  when: ansible_facts['os_family'] == 'RedHat'
+
+- name: Install standard packages
+  package:
+    name: [
           'gcc',
           'gnupg',
-          'which',
           'make',
-          'cronie',
            ]
     state: latest
 
 - name: Install my packages
-  dnf:
+  package:
     name: [
-          'libselinux', # Required for ansible
           'htop',
           'nano',
           'gedit',
