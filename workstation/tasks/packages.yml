@@ -33,7 +33,7 @@
           'gedit',
           'gedit-plugins',
           'git',
-          'nethack',
+#          'nethack',
            ]
     state: latest
 
@@ -43,6 +43,9 @@
   become: yes
   become_user: "{{ user }}"
 - import_tasks: installations/rvm.yml
+- import_tasks: installations/gvm.yml
+  become: yes
+  become_user: "{{ user }}"
 
 #- name: Install more packages
 #  dnf:

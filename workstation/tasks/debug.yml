@@ -13,3 +13,7 @@
 - shell: /usr/bin/whoami
   register: result
   become_user: kieran
+
+- name: test2
+  shell: echo f
+  when: "playbook_dir | regex_search('(kieran)')"

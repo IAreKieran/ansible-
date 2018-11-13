@@ -1,0 +1,85 @@
+# All the gvm scripts seem to be ash-compatible, but not dash
+# Use bash for now, to be safe
+
+- set_fact:
+    gvm_dir: "/home/{{ user }}/.gvm"
+    go_versions: "['1.11.1']"
+    go_default: 1.11.1
+
+- set_fact:
+    go_use: "{{ go_default }}"
+
+- name: Install dependancies
+  package:
+    name: [
+          'binutils',
+          'bison',
+          'curl',
+          'gcc',
+          'git',
+          'make',
+           ]
+    state: latest
+  become: yes
+  become_user: root
+
+- name: Install gvm
+  shell: 'curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer | bash'
+  args:
+    warn: no
+  register: results
+  changed_when: results.rc == 0
+  ignore_errors: yes
+
+- name: Add gvm to bash
+  lineinfile:
+    path: "/home/{{ user }}/{{ item }}"
+    line: '[[ -s "{{ gvm_dir }}/scripts/gvm" ]] && source "{{ gvm_dir }}/scripts/gvm"'
+    create: yes
+  loop:
+    - .bashrc
+    - .bash_profile
+
+- name: Check for an existing go version
+  shell: "go version || (. {{ gvm_dir }}/scripts/gvm && go version)"
+  args:
+    executable: /bin/bash
+  register: result
+  ignore_errors: yes
+  changed_when: false
+
+- name: Install go1.4 for bootstrap
+  shell: ". {{ gvm_dir }}/scripts/gvm && (gvm install go1.4 -B || gvm install go1.4)"
+  args:
+    executable: /bin/bash
+  when: result.rc != 0
+  register: bootstrap_result
+  changed_when: '"Already installed!" not in bootstrap_result.stdout'
+
+- set_fact:
+    go_use: 1.4
+  when: result.rc != 0
+  changed_when: false
+
+- name: Install go versions
+  shell: ". {{ gvm_dir }}/scripts/gvm && gvm use go{{ go_use }} && (gvm install go{{ item }} -B || gvm install go{{ item }})"
+  args:
+    executable: /bin/bash
+  loop: "{{ go_versions }}"
+  register: result
+  changed_when: '"Already installed!" not in result.stdout'
+
+- name: Set default
+  shell: ". {{ gvm_dir }}/scripts/gvm && gvm use go{{ go_default }} --default"
+  args:
+    executable: /bin/bash
+  changed_when: false
+
+- name: remove go1.4
+  shell: ". {{ gvm_dir }}/scripts/gvm && gvm uninstall go1.4"
+  args:
+    executable: /bin/bash
+  register: result
+  ignore_errors: yes
+  changed_when: result.rc != 1
+  when: "not go_versions | regex_search('1.4')"
